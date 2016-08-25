@@ -1,6 +1,7 @@
 package com.romeroz.moviesearch.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.romeroz.moviesearch.R;
+import com.romeroz.moviesearch.activities.MovieDetailActivity;
 import com.romeroz.moviesearch.model.Movie;
 
 import java.util.ArrayList;
@@ -80,13 +82,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                 @Override
                 public void onClick(View view) {
 
-                   /* // Pass pokemon id to activity
-                    int id = mItemArrayList.get(getAdapterPosition()).getId();
+                    // Pass pokemon id to activity
+                    String imbdID = mItemArrayList.get(getAdapterPosition()).getImdbID();
 
-                    Intent i = new Intent(mContext, DetailActivity.class);
-                    i.putExtra(DetailActivity.ARG_POKEMON_ID, id);
+                    Intent i = new Intent(mContext, MovieDetailActivity.class);
+                    i.putExtra(MovieDetailActivity.ARG_IMBD_ID, imbdID);
 
-                    // For mPokemonImageView transition (see DetailActivity.setupUI())
+                    mContext.startActivity(i);
+
+                    /*// For mPokemonImageView transition (see DetailActivity.setupUI())
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         // Remember to set android:transitionName in activity_detail.xml and item_layout.xml
                         mContext.startActivity(i, ActivityOptions.makeSceneTransitionAnimation(

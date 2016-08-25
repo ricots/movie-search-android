@@ -1,6 +1,7 @@
 package com.romeroz.moviesearch.retrofit;
 
 
+import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.model.MovieSearchResponse;
 
 import retrofit2.Call;
@@ -21,5 +22,14 @@ public interface MovieInterface {
     @GET("./") // Note: Use "./" if there is no path to put in
     Call<MovieSearchResponse> getSearchMovies(
             @Query("s") String movieTitle, @Query("type") String type, @Query("page") int page);
+
+    /**
+     * Get movie by imbdID
+     * @param imbdID ID
+     * @return
+     */
+    @GET("./")
+    Call<Movie> getMovie(
+            @Query("i") String imbdID);
 
 }

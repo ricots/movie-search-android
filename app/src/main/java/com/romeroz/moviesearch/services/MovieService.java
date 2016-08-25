@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.romeroz.moviesearch.MyApplication;
+import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.model.MovieSearchResponse;
 import com.romeroz.moviesearch.retrofit.RestManager;
 
@@ -40,7 +41,7 @@ public class MovieService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startActionGetMovie(Context context, String imdbID, String param2) {
+    public static void startActionGetMovie(Context context, String imdbID) {
         Intent intent = new Intent(context, MovieService.class);
         intent.setAction(ACTION_GET_MOVIE);
         intent.putExtra(EXTRA_PARAM_IMDB_ID, imdbID);
@@ -101,5 +102,41 @@ public class MovieService extends IntentService {
     }
 
     private void handleActionGetMovie(String imdbID) {
+        RestManager mManager = new RestManager();
+        Movie movie;
+
+        Intent intentResponse = new Intent();
+        intentResponse.setAction(MovieService.ACTION_GET_MOVIE);
+
+        try {
+            Response<Movie> response = mManager
+                    .getmMovieInterface()
+                    .getMovie(imdbID)
+                    .execute();
+
+            // Debugging to make sure everything is working properly
+            Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.isSuccessful());
+            Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.raw());
+
+            if (response.isSuccessful()) {
+                movie = response.body();
+
+                Gson gson = new Gson();
+
+                // Set the ArrayList as part of our response.
+                intentResponse.putExtra(DATA, gson.toJson(movie));
+                intentResponse.putExtra(RESULT, STATUS_OK);
+
+                // Broadcast intent
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intentResponse);
+
+            } else {
+                Log.d(MyApplication.APP_TAG, "Response empty");
+            }
+
+        } catch (IOException e) {
+            // Handle error
+            Log.d(MyApplication.APP_TAG, "ERROR:" + e.toString());
+        }
     }
 }

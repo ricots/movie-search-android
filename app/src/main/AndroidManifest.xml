@@ -15,7 +15,8 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +26,9 @@
 
         <service
             android:name=".services.MovieService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".activities.MovieDetailActivity"></activity>
     </application>
 
 </manifest>

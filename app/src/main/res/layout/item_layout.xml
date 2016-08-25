@@ -22,7 +22,7 @@
             android:id="@+id/poster_image_view"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_settings_black_24dp"
+            android:src="@drawable/blank_movie_poster"
             android:layout_marginRight="16dp"/>
 
         <LinearLayout
