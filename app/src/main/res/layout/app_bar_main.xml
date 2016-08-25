@@ -12,15 +12,60 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
+        <!-- hamburger icon padding see: http://stackoverflow.com/a/38374714/3075340 -->
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:contentInsetStartWithNavigation="0dp"
+            >
+
+            <LinearLayout
+                android:id="@+id/search_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/search_edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/white"
+                    android:hint="Search for a Movie"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLength="16"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@null" />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/search_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Search"
+                    android:padding="8dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_search_black_24dp"
+                    android:tint="@color/white" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <com.romeroz.moviesearch.ui.CustomViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>
