@@ -6,12 +6,18 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.romeroz.moviesearch.R;
+import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.adapters.ViewPagerAdapter;
 import com.romeroz.moviesearch.fragments.FavoritesFragment;
 import com.romeroz.moviesearch.fragments.SearchFragment;
@@ -24,6 +30,10 @@ public class MainActivity extends AppCompatActivity
     // UI
     private ViewPagerAdapter mViewPagerAdapter;
     private CustomViewPager mViewPager;
+
+    // From AppBar
+    private EditText mSearchEditText;
+    private AppCompatImageButton mSearchButton;
 
     //private TextView mToolbarTitleTextView;
     private LinearLayout mSearchLayout;
@@ -38,6 +48,8 @@ public class MainActivity extends AppCompatActivity
 
         //mToolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
         mSearchLayout = (LinearLayout) findViewById(R.id.search_layout);
+        mSearchEditText = (EditText) findViewById(R.id.search_edit_text);
+        mSearchButton = (AppCompatImageButton) findViewById(R.id.search_button);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -52,13 +64,42 @@ public class MainActivity extends AppCompatActivity
         if (mViewPager != null) {
             setupViewPager();
         }
+
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonSearchMovieHandler();
+            }
+        });
+
+        // Searches after you press "Search" in softkeyboard
+        // Remember to set android:imeOptions="actionSearch" in the last EditText
+        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == EditorInfo.IME_ACTION_SEARCH) {
+                    buttonSearchMovieHandler();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void buttonSearchMovieHandler(){
+        // Get SearchFragment (first fragment)
+        SearchFragment searchFragment = (SearchFragment) mViewPagerAdapter.getItem(0);
+        searchFragment.searchForMovie(mSearchEditText.getText().toString());
+
+        // Hide keyboard
+        Utility.hideSoftKeyboard(MainActivity.this);
     }
 
     /**
      * Set up the ViewPager
      */
     private void setupViewPager() {
-        SearchFragment searchFragment = SearchFragment.newInstance("","");
+        SearchFragment searchFragment = SearchFragment.newInstance();
         FavoritesFragment favoritesFragment = FavoritesFragment.newInstance("","");
         SettingsFragment settingsFragment = SettingsFragment.newInstance("","");
 

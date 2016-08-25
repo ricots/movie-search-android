@@ -1,13 +1,24 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SearchFragment">
+    tools:context=".fragments.SearchFragment"
+    android:id="@+id/root_view">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- Progress spinner shown when loading data. Use the Utility.showProgress() method to show/hide. -->
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:visibility="visible" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/pokedex_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Search fragment" />
+        android:layout_height="wrap_content"
+        />
 
-</FrameLayout>
+</RelativeLayout>
