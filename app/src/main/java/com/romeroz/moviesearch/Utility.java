@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Build;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ProgressBar;
 
 public class Utility {
 
@@ -20,7 +21,7 @@ public class Utility {
      * @param toggleView The view you want to hide when progressView is shown
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public static void showProgress(final boolean show, Context context, final View progressView, final View toggleView) {
+    public static void showProgress(final boolean show, Context context, final ProgressBar progressView, final View toggleView) {
         // Check if context is null
         if (context == null){
             return;

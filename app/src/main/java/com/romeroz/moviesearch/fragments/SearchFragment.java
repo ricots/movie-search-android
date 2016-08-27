@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.adapters.MoviesAdapter;
@@ -25,6 +26,7 @@ import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.model.MovieSearchResponse;
 import com.romeroz.moviesearch.services.MovieService;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -35,7 +37,7 @@ import java.util.ArrayList;
  */
 public class SearchFragment extends Fragment {
 
-    private View mMainView;
+    private View mRootView;
     private RecyclerView mMoviesRecyclerView;
     private MoviesAdapter mMoviesAdapter;
     private ArrayList<Movie> mMovieList;
@@ -63,10 +65,10 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment. Get the rootView and do stuff to it
-        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_search, container, false);
 
         // Set up RecyclerView
-        mMoviesRecyclerView = (RecyclerView) rootView.findViewById(R.id.pokedex_recycler_view);
+        mMoviesRecyclerView = (RecyclerView) mRootView.findViewById(R.id.pokedex_recycler_view);
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mMoviesRecyclerView.hasFixedSize();
@@ -74,19 +76,25 @@ public class SearchFragment extends Fragment {
         // If using nested scroll view, set to false to enable smooth scrolling
         mMoviesRecyclerView.setNestedScrollingEnabled(false);
 
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+        mProgressBar = (ProgressBar) mRootView.findViewById(R.id.progress_bar);
 
         // Set up our RecyclerView's Adapter
         mMoviesAdapter = new MoviesAdapter(getActivity());
         mMoviesRecyclerView.setAdapter(mMoviesAdapter);
 
-        // TODO: progress bar isnt showing...
-        // Main View (used to show/hide spinner)
-        mMainView = (View) rootView.findViewById(R.id.root_view);
-        // Show progress spinner
-        Utility.showProgress(true, getActivity(), mProgressBar, mMainView);
+        // Did we rotate the screen? If so load data saved in onSavedInstanceState()
+        if(savedInstanceState != null){
+            Gson gson = new Gson();
+            String data = savedInstanceState.getString("itemList");
+            // Set type for List
+            Type type = new TypeToken<ArrayList<Movie>>(){}.getType();
+            mMovieList = gson.fromJson(data, type);
 
-        return rootView;
+            // Update adapter
+            mMoviesAdapter.swapData(mMovieList);
+        }
+
+        return mRootView;
     }
 
     @Override
@@ -98,6 +106,17 @@ public class SearchFragment extends Fragment {
         filter.addAction(MovieService.ACTION_SEARCH_MOVIES);
         mBroadcastReceiver = new MovieSearchReceiver();
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, filter);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        //super.onSaveInstanceState(outState);
+        // Save our data via Gson
+        Gson gson = new Gson();
+        outState.putString("itemList", gson.toJson(mMovieList));
+
+        // Call super last
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -117,7 +136,7 @@ public class SearchFragment extends Fragment {
 
     public void searchForMovie(String movieTitle){
         // Show progress spinner
-        Utility.showProgress(true, getActivity(), mProgressBar, mMainView);
+        Utility.showProgress(true, getActivity(), mProgressBar, mMoviesRecyclerView);
         // Make api call
         MovieService.startActionSearchMovies(getActivity(), movieTitle);
     }
@@ -141,12 +160,12 @@ public class SearchFragment extends Fragment {
 
                 // No results
                 if(mMovieList == null){
-                    Snackbar.make(mMainView,
+                    Snackbar.make(mRootView,
                             "No results found", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
 
                 // Hide spinner
-                Utility.showProgress(false, getActivity(), mProgressBar, mMainView);
+                Utility.showProgress(false, getActivity(), mProgressBar, mMoviesRecyclerView);
 
             }
 

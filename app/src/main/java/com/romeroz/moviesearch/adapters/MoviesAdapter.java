@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.activities.MovieDetailActivity;
@@ -45,7 +46,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         viewHolder.mTitleTextView.setText(title);
         viewHolder.mYearTextView.setText(year);
         // Clear the ImageView to not show previous recycled view's image
-        viewHolder.mPosterImageView.setImageResource(android.R.color.transparent);
+        viewHolder.mPosterImageView.setImageResource(R.drawable.blank_movie_poster);
 
         if(!poster.isEmpty()) {
             // Use Universal Image Loader to load the photo and save it.
@@ -81,12 +82,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
                 @Override
                 public void onClick(View view) {
-
-                    // Pass pokemon id to activity
-                    String imbdID = mItemArrayList.get(getAdapterPosition()).getImdbID();
-
+                    // Pass movie to Activity
                     Intent i = new Intent(mContext, MovieDetailActivity.class);
-                    i.putExtra(MovieDetailActivity.ARG_IMBD_ID, imbdID);
+
+                    Movie movie = mItemArrayList.get(getAdapterPosition());
+                    Gson gson = new Gson();
+                    i.putExtra(MovieDetailActivity.ARG_MOVIE, gson.toJson(movie));
 
                     mContext.startActivity(i);
 
