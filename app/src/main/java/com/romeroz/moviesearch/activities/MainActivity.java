@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void setupViewPager() {
         SearchFragment searchFragment = SearchFragment.newInstance();
-        FavoritesFragment favoritesFragment = FavoritesFragment.newInstance("","");
+        FavoritesFragment favoritesFragment = FavoritesFragment.newInstance();
         SettingsFragment settingsFragment = SettingsFragment.newInstance("","");
 
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());

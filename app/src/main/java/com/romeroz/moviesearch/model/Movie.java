@@ -2,7 +2,9 @@ package com.romeroz.moviesearch.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Movie {
+import io.realm.RealmObject;
+
+public class Movie extends RealmObject {
     // MovieService.ACTION_SEARCH_MOVIES returns these properties:
     @SerializedName("Title")
     private String title;

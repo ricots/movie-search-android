@@ -2,6 +2,8 @@ package com.romeroz.moviesearch.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +19,8 @@ import com.romeroz.moviesearch.activities.MovieDetailActivity;
 import com.romeroz.moviesearch.model.Movie;
 
 import java.util.ArrayList;
+
+import io.realm.Realm;
 
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
@@ -54,6 +58,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             // load the image because we have set disk cacheing on with UIL
             ImageLoader.getInstance().displayImage(poster, viewHolder.mPosterImageView);
         }
+
+        if(movieIsFavorite(imdbID)){
+            viewHolder.mFavoriteButton.setImageResource(R.drawable.ic_star_black_24dp);
+            // Todo: not working to set color
+            viewHolder.mFavoriteButton.setSupportBackgroundTintList(
+                    ContextCompat.getColorStateList(mContext, R.color.gold));
+        } else {
+            // Defaults
+            viewHolder.mFavoriteButton.setImageResource(R.drawable.ic_star_border_black_24dp);
+            // todo not working
+            viewHolder.mFavoriteButton.setSupportBackgroundTintList(
+                    ContextCompat.getColorStateList(mContext, R.color.grey));
+        }
     }
 
     @Override
@@ -68,6 +85,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         protected ImageView mPosterImageView;
         protected TextView mTitleTextView;
         protected TextView mYearTextView;
+        private AppCompatImageButton mFavoriteButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -77,6 +95,23 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             mPosterImageView = (ImageView) view.findViewById(R.id.poster_image_view);
             mTitleTextView = (TextView) view.findViewById(R.id.title_text_view);
             mYearTextView = (TextView) view.findViewById(R.id.year_text_view);
+            mFavoriteButton = (AppCompatImageButton) view.findViewById(R.id.favorite_button);
+
+            mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Movie movie = mItemArrayList.get(getAdapterPosition());
+                    if(movieIsFavorite(movie.getImdbID())){
+                        // Todo: delete from realm
+                    } else {
+                        Realm mRealm = Realm.getDefaultInstance();
+                        mRealm.beginTransaction(); // must begin
+                        mRealm.insert(movie);
+                        mRealm.commitTransaction(); // must commit
+                    }
+
+                }
+            });
 
             mCardView.setOnClickListener(new View.OnClickListener() {
 
@@ -105,6 +140,27 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             });
 
         }
+    }
+
+    /**
+     * Check if movie exists in local realm storage
+     * @param imdbID id
+     * @return
+     */
+    private Boolean movieIsFavorite(String imdbID){
+        Realm mRealm = Realm.getDefaultInstance();
+        mRealm.beginTransaction(); // must begin
+
+        Movie movie = mRealm.where(Movie.class).equalTo("imdbID", imdbID).findFirst();
+
+        mRealm.commitTransaction(); // must commit
+
+        if(movie != null){
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     public void swapData(ArrayList<Movie> itemArrayList) {

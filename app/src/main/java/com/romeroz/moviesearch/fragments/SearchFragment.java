@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +67,7 @@ public class SearchFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_search, container, false);
 
         // Set up RecyclerView
-        mMoviesRecyclerView = (RecyclerView) mRootView.findViewById(R.id.pokedex_recycler_view);
+        mMoviesRecyclerView = (RecyclerView) mRootView.findViewById(R.id.movie_recycler_view);
         // Use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mMoviesRecyclerView.hasFixedSize();
@@ -100,7 +99,6 @@ public class SearchFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("Roman", "SearchFragment.onResume");
         // Register the BroadcastReceiver to receive broadcasts.
         IntentFilter filter = new IntentFilter();
         filter.addAction(MovieService.ACTION_SEARCH_MOVIES);
@@ -110,6 +108,7 @@ public class SearchFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        // Todo check if you call this last
         //super.onSaveInstanceState(outState);
         // Save our data via Gson
         Gson gson = new Gson();
@@ -122,8 +121,6 @@ public class SearchFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d("Roman", "SearchFragment.onPause");
-
         // Unregister BroadcastReceiver. It is possible it wasn't registered so wrap in try/catch
         try {
             // Unregister the broadcast receivers on pause because we do not want to receive new info

@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+// Realm (2/2) - See: https://realm.io/docs/java/latest/
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 24
