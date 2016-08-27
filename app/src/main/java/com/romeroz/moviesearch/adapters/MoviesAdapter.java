@@ -16,20 +16,28 @@ import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.activities.MovieDetailActivity;
+import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
+import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
 import com.romeroz.moviesearch.model.Movie;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     private Context mContext;
     private ArrayList<Movie> mItemArrayList;
+    private Realm mRealm;
 
     public MoviesAdapter(Context context) {
         this.mContext = context;
+        // Get Realm Instance
+        mRealm = Realm.getDefaultInstance();
      }
 
     @Override
@@ -101,13 +109,36 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                 @Override
                 public void onClick(View view) {
                     Movie movie = mItemArrayList.get(getAdapterPosition());
-                    if(movieIsFavorite(movie.getImdbID())){
-                        // Todo: delete from realm
+                    String imbdId = movie.getImdbID();
+
+                    if(movieIsFavorite(imbdId)){
+                        /**
+                         * Delete Movie from Realm
+                         */
+                        mRealm.beginTransaction();
+                        // Query object and delete it
+                        RealmResults<Movie> result = mRealm.where(Movie.class).equalTo("imdbID",imbdId).findAll();
+                        result.deleteAllFromRealm();
+                        mRealm.commitTransaction();
+
+                        // Update UI
+                        mFavoriteButton.setImageResource(R.drawable.ic_star_border_black_24dp);
+
+                        // Notify listeners
+                        EventBus.getDefault().post(new MovieRemovedEvent(imbdId));
                     } else {
-                        Realm mRealm = Realm.getDefaultInstance();
+                        /**
+                         * Add Movie to Realm
+                         */
                         mRealm.beginTransaction(); // must begin
                         mRealm.insert(movie);
                         mRealm.commitTransaction(); // must commit
+
+                        // Update UI
+                        mFavoriteButton.setImageResource(R.drawable.ic_star_black_24dp);
+
+                        // Notify Listeners
+                        EventBus.getDefault().post(new MovieAddedEvent(movie));
                     }
 
                 }
@@ -125,17 +156,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                     i.putExtra(MovieDetailActivity.ARG_MOVIE, gson.toJson(movie));
 
                     mContext.startActivity(i);
-
-                    /*// For mPokemonImageView transition (see DetailActivity.setupUI())
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        // Remember to set android:transitionName in activity_detail.xml and item_layout.xml
-                        mContext.startActivity(i, ActivityOptions.makeSceneTransitionAnimation(
-                                (Activity) mContext, mPokemonImageView, mPokemonImageView.getTransitionName()).toBundle());
-                    } else {
-                        // Code to run on older devices
-                        mContext.startActivity(i);
-                    }*/
-
                 }
             });
 
@@ -148,7 +168,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
      * @return
      */
     private Boolean movieIsFavorite(String imdbID){
-        Realm mRealm = Realm.getDefaultInstance();
         mRealm.beginTransaction(); // must begin
 
         Movie movie = mRealm.where(Movie.class).equalTo("imdbID", imdbID).findFirst();
@@ -160,7 +179,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         } else {
             return false;
         }
+    }
 
+    public void removeMovieByImbdID(String imbdID){
+        int position = 0;
+        for(Movie movie : mItemArrayList) {
+            if(movie.getImdbID().equals(imbdID)) {
+                mItemArrayList.remove(movie);
+                notifyItemRemoved(position);
+            }
+            position = position + 1;
+        }
     }
 
     public void swapData(ArrayList<Movie> itemArrayList) {
@@ -188,5 +217,4 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             notifyItemChanged(position);
         }
     }
-
 }

@@ -17,9 +17,9 @@ import com.romeroz.moviesearch.model.Movie;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class FavoritesFragment extends Fragment {
 
@@ -84,12 +84,29 @@ public class FavoritesFragment extends Fragment {
         Realm mRealm = Realm.getDefaultInstance();
         mRealm.beginTransaction(); // must begin
 
-        List<Movie> list =  mRealm.where(Movie.class).findAll();
-        mMovieList = new ArrayList<>(list);
-
+        RealmResults<Movie> realmResults =  mRealm.where(Movie.class).findAll();
         mRealm.commitTransaction(); // must commit
 
+        /**
+         * Important:
+         * Use mRealm.copyFromRealm() to make a copy of results from realm.
+         * If you do not, any transactions you do in realm will affect your in-memory arraylists.
+         * We do this because we want to make our own pretty animations in our Adapter.
+         *
+         * Use this if you do not want to make copies:
+         * mMovieList = new ArrayList<Movie>(realmResults);
+         */
+        mMovieList = (ArrayList<Movie>) mRealm.copyFromRealm(realmResults);
+
         mMoviesAdapter.swapData(mMovieList);
+    }
+
+    public void removeMovieFromAdapter(String imbdID){
+        mMoviesAdapter.removeMovieByImbdID(imbdID);
+    }
+
+    public void addMoveToAdapter(Movie movie){
+        mMoviesAdapter.addItem(movie);
     }
 
     @Override

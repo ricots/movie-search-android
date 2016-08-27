@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,13 +17,21 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.romeroz.moviesearch.MyApplication;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.adapters.ViewPagerAdapter;
+import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
+import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
 import com.romeroz.moviesearch.fragments.FavoritesFragment;
 import com.romeroz.moviesearch.fragments.SearchFragment;
 import com.romeroz.moviesearch.fragments.SettingsFragment;
+import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.ui.CustomViewPager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -93,6 +102,47 @@ public class MainActivity extends AppCompatActivity
 
         // Hide keyboard
         Utility.hideSoftKeyboard(MainActivity.this);
+    }
+
+    /**
+     * Receiving MovieAddedEvent event when it happens,
+     * Using sticky = true telling the activity please go and get the last MovieAddedEvent
+     * that has been posted before (e.g. if we navigated away from activity).
+     * See: http://greenrobot.org/eventbus/documentation/configuration/sticky-events/
+     * */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onMovieAddedEvent(MovieAddedEvent event){
+        Log.d(MyApplication.APP_TAG, "MovieAddedEvent!");
+        Movie movie = event.getMovie();
+
+        // Update FavoritesFragment
+        FavoritesFragment favoritesFragment = (FavoritesFragment) mViewPagerAdapter.getItem(1);
+        favoritesFragment.addMoveToAdapter(movie);
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onMovieRemovedEvent(MovieRemovedEvent event){
+        Log.d(MyApplication.APP_TAG, "MovieRemovedEvent!");
+        String imbdID = event.getImdbID();
+
+        // Update FavoritesFragment
+        FavoritesFragment favoritesFragment = (FavoritesFragment) mViewPagerAdapter.getItem(1);
+        favoritesFragment.removeMovieFromAdapter(imbdID);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Register EventBus to receive events
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        // Un-register EventBus to stop receiving events
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     /**

@@ -16,7 +16,9 @@ import java.io.IOException;
 
 import retrofit2.Response;
 
-
+/**
+ * Database: http://www.omdbapi.com/
+ */
 public class MovieService extends IntentService {
     public static final String ACTION_SEARCH_MOVIES = "com.romeroz.moviesearch.services.action.SEARCH_MOVIES";
     public static final String ACTION_GET_MOVIE = "com.romeroz.moviesearch.services.action.GET_MOVIE";

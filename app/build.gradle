@@ -43,5 +43,7 @@ dependencies {
     // Gson - See: https://github.com/google/gson (needed for retrofit2)
     compile 'com.google.code.gson:gson:2.6.2'
 
+    // EventBus - See: https://github.com/greenrobot/EventBus
+    compile 'org.greenrobot:eventbus:3.0.0'
 
 }
