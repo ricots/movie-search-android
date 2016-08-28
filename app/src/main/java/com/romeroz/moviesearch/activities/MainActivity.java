@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity
     private EditText mSearchEditText;
     private AppCompatImageButton mSearchButton;
 
-    //private TextView mToolbarTitleTextView;
     private LinearLayout mSearchLayout;
 
     @Override
@@ -55,15 +54,24 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //mToolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitleTextView);
         mSearchLayout = (LinearLayout) findViewById(R.id.search_layout);
         mSearchEditText = (EditText) findViewById(R.id.search_edit_text);
         mSearchButton = (AppCompatImageButton) findViewById(R.id.search_button);
 
+        /**
+         * Set up drawer
+         */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                // Hide the keyboard
+                Utility.hideSoftKeyboard(MainActivity.this);
+            }
+        };
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -73,6 +81,7 @@ public class MainActivity extends AppCompatActivity
         if (mViewPager != null) {
             setupViewPager();
         }
+
 
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
