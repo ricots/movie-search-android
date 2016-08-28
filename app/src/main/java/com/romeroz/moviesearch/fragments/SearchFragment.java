@@ -131,6 +131,10 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    public void updateMovieInAdapter(String imbdID){
+        mMoviesAdapter.updateMovieByImbdID(imbdID);
+    }
+
     public void searchForMovie(String movieTitle){
         // Show progress spinner
         Utility.showProgress(true, getActivity(), mProgressBar, mMoviesRecyclerView);

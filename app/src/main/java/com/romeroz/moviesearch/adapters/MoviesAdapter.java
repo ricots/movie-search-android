@@ -15,17 +15,13 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.romeroz.moviesearch.R;
+import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.activities.MovieDetailActivity;
-import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
-import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
 import com.romeroz.moviesearch.model.Movie;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
@@ -67,7 +63,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             ImageLoader.getInstance().displayImage(poster, viewHolder.mPosterImageView);
         }
 
-        if(movieIsFavorite(imdbID)){
+        if(Utility.movieIsFavorite(imdbID)){
             viewHolder.mFavoriteButton.setImageResource(R.drawable.ic_star_black_24dp);
             // Todo: not working to set color
             viewHolder.mFavoriteButton.setSupportBackgroundTintList(
@@ -109,38 +105,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                 @Override
                 public void onClick(View view) {
                     Movie movie = mItemArrayList.get(getAdapterPosition());
-                    String imbdId = movie.getImdbID();
-
-                    if(movieIsFavorite(imbdId)){
-                        /**
-                         * Delete Movie from Realm
-                         */
-                        mRealm.beginTransaction();
-                        // Query object and delete it
-                        RealmResults<Movie> result = mRealm.where(Movie.class).equalTo("imdbID",imbdId).findAll();
-                        result.deleteAllFromRealm();
-                        mRealm.commitTransaction();
-
-                        // Update UI
-                        mFavoriteButton.setImageResource(R.drawable.ic_star_border_black_24dp);
-
-                        // Notify listeners
-                        EventBus.getDefault().post(new MovieRemovedEvent(imbdId));
-                    } else {
-                        /**
-                         * Add Movie to Realm
-                         */
-                        mRealm.beginTransaction(); // must begin
-                        mRealm.insert(movie);
-                        mRealm.commitTransaction(); // must commit
-
-                        // Update UI
-                        mFavoriteButton.setImageResource(R.drawable.ic_star_black_24dp);
-
-                        // Notify Listeners
-                        EventBus.getDefault().post(new MovieAddedEvent(movie));
-                    }
-
+                    Utility.toggleAddingMovieToFavorites(movie, mFavoriteButton);
                 }
             });
 
@@ -162,34 +127,38 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         }
     }
 
-    /**
-     * Check if movie exists in local realm storage
-     * @param imdbID id
-     * @return
-     */
-    private Boolean movieIsFavorite(String imdbID){
-        mRealm.beginTransaction(); // must begin
-
-        Movie movie = mRealm.where(Movie.class).equalTo("imdbID", imdbID).findFirst();
-
-        mRealm.commitTransaction(); // must commit
-
-        if(movie != null){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public void removeMovieByImbdID(String imbdID){
+        int moviePosition = 0;
+
         int position = 0;
         for(Movie movie : mItemArrayList) {
             if(movie.getImdbID().equals(imbdID)) {
-                mItemArrayList.remove(movie);
-                notifyItemRemoved(position);
+                moviePosition = position;
             }
             position = position + 1;
         }
+
+        // Remove movie here to avoid java.util.ConcurrentModificationException
+        Movie movie =  mItemArrayList.get(moviePosition);
+        mItemArrayList.remove(movie);
+        notifyItemRemoved(position);
+    }
+
+    public void updateMovieByImbdID(String imbdID){
+        int moviePosition = 0;
+
+        int position = 0;
+        for(Movie movie : mItemArrayList) {
+            if(movie.getImdbID().equals(imbdID)) {
+                moviePosition = position;
+            }
+            position = position + 1;
+        }
+
+        // Remove movie here to avoid java.util.ConcurrentModificationException
+        Movie movie =  mItemArrayList.get(moviePosition);
+        mItemArrayList.set(moviePosition, movie);
+        notifyItemChanged(moviePosition, movie);
     }
 
     public void swapData(ArrayList<Movie> itemArrayList) {
@@ -211,10 +180,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         notifyItemRemoved(position);
     }
 
-    public void changeItem(Movie itemArrayList, int position){
-        if (itemArrayList != null){
-            mItemArrayList.set(position, itemArrayList);
-            notifyItemChanged(position);
+    public void changeItem(Movie movie, int position){
+        if (movie != null){
+            mItemArrayList.set(position, movie);
+            notifyItemChanged(position, movie);
         }
     }
 }

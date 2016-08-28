@@ -93,6 +93,13 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
+
+        /**
+         * Register EventBus to receive events.
+         * See MovieDetailActivity for onStart()/onStop() implementation.
+         * Note: will get error if you try to register EventBus twice
+         */
+        EventBus.getDefault().register(this);
     }
 
     private void buttonSearchMovieHandler(){
@@ -118,6 +125,10 @@ public class MainActivity extends AppCompatActivity
         // Update FavoritesFragment
         FavoritesFragment favoritesFragment = (FavoritesFragment) mViewPagerAdapter.getItem(1);
         favoritesFragment.addMoveToAdapter(movie);
+
+        // Update SearchFragment
+        SearchFragment searchFragment = (SearchFragment) mViewPagerAdapter.getItem(0);
+        searchFragment.updateMovieInAdapter(movie.getImdbID());
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -129,20 +140,9 @@ public class MainActivity extends AppCompatActivity
         FavoritesFragment favoritesFragment = (FavoritesFragment) mViewPagerAdapter.getItem(1);
         favoritesFragment.removeMovieFromAdapter(imbdID);
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Register EventBus to receive events
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        // Un-register EventBus to stop receiving events
-        EventBus.getDefault().unregister(this);
-        super.onStop();
+        // Update SearchFragment
+        SearchFragment searchFragment = (SearchFragment) mViewPagerAdapter.getItem(0);
+        searchFragment.updateMovieInAdapter(imbdID);
     }
 
     /**

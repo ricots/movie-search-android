@@ -6,11 +6,85 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.support.v7.widget.AppCompatImageButton;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
+import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
+import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
+import com.romeroz.moviesearch.model.Movie;
+
+import org.greenrobot.eventbus.EventBus;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class Utility {
+
+    /**
+     * Check if Movie is a in our local Realm database. Add movie to Rleam if so or remove it otherwise.
+     * Then update the favorites button image resource and broadcast event via EventBus.
+     *
+     * @param movie movie object (only needs to have imbdID)
+     * @param appCompatImageButton favorites Button
+     */
+    public static void toggleAddingMovieToFavorites(Movie movie, AppCompatImageButton appCompatImageButton){
+        // Get Realm Instance
+        Realm mRealm = Realm.getDefaultInstance();
+        String imbdID = movie.getImdbID();
+
+        if(Utility.movieIsFavorite(imbdID)){
+            /**
+             * Delete Movie from Realm
+             */
+            mRealm.beginTransaction();
+            // Query object and delete it
+            RealmResults<Movie> result = mRealm.where(Movie.class).equalTo("imdbID",imbdID).findAll();
+            result.deleteAllFromRealm();
+            mRealm.commitTransaction();
+
+            // Update UI of button
+            appCompatImageButton.setImageResource(R.drawable.ic_star_border_black_24dp);
+
+            // Notify listeners
+            EventBus.getDefault().post(new MovieRemovedEvent(imbdID));
+        } else {
+            /**
+             * Add Movie to Realm
+             */
+            mRealm.beginTransaction(); // must begin
+            mRealm.insert(movie);
+            mRealm.commitTransaction(); // must commit
+
+            // Update UI of button
+            appCompatImageButton.setImageResource(R.drawable.ic_star_black_24dp);
+
+            // Notify Listeners
+            EventBus.getDefault().post(new MovieAddedEvent(movie));
+        }
+    }
+
+    /**
+     * Check if movie exists in local realm storage
+     * @param imdbID id
+     * @return
+     */
+    public static Boolean movieIsFavorite(String imdbID){
+        // Get Realm Instance
+        Realm mRealm = Realm.getDefaultInstance();
+        mRealm.beginTransaction(); // must begin
+
+        Movie movie = mRealm.where(Movie.class).equalTo("imdbID", imdbID).findFirst();
+
+        mRealm.commitTransaction(); // must commit
+
+        if(movie != null){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Shows the progress UI and hides another view.
