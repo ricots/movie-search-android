@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 // Realm (2/2) - See: https://realm.io/docs/java/latest/
 apply plugin: 'realm-android'
+// Dagger (2/3) - See: https://github.com/codepath/android_guides/wiki/Dependency-Injection-with-Dagger-2
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 24
@@ -33,15 +35,15 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.2.0'
     compile 'com.android.support:support-v4:24.2.0'
 
-    // Universal Image Loader - See: https://github.com/nostra13/Android-Universal-Image-Loader
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-
     // Retrofit2 stuff - See: http://square.github.io/retrofit/ (plus gson converter)
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
     // Gson - See: https://github.com/google/gson (needed for retrofit2)
     compile 'com.google.code.gson:gson:2.6.2'
+
+    // Universal Image Loader - See: https://github.com/nostra13/Android-Universal-Image-Loader
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
     // EventBus - See: https://github.com/greenrobot/EventBus
     compile 'org.greenrobot:eventbus:3.0.0'

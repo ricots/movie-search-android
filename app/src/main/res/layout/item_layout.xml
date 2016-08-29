@@ -13,7 +13,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="110dp"
         android:orientation="horizontal"
         android:padding="8dp"
         >
@@ -25,9 +25,9 @@
             android:src="@drawable/blank_movie_poster"
             android:layout_marginRight="16dp"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="90dp"
             android:orientation="vertical"
             android:layout_gravity="center_vertical"
             >
@@ -36,39 +36,36 @@
                 android:id="@+id/title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_gravity="center_vertical"
                 android:text="Teenage Mutant Ninja Turtles"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/year_text_view"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="4dp">
+                android:paddingTop="2dp"
+                android:layout_below="@id/title_text_view"
+                android:text="2014"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                />
 
-                <TextView
-                    android:id="@+id/year_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="2014"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    />
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/favorite_button"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_star_border_black_24dp"
+                android:tint="@color/star_color"
+                />
 
-                <android.support.v7.widget.AppCompatImageButton
-                    android:id="@+id/favorite_button"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="2dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_star_border_black_24dp"
-                    android:tint="@color/grey"
-                    />
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>

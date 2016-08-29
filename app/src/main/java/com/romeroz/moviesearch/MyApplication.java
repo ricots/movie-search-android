@@ -1,6 +1,7 @@
 package com.romeroz.moviesearch;
 
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -14,9 +15,12 @@ public class MyApplication extends Application {
 
     public static String APP_TAG = "MovieSearch";
 
+    private static MyApplication singleton;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        singleton = this;
 
         /**
          * Instantiate Realm with default configuration
@@ -49,7 +53,14 @@ public class MyApplication extends Application {
 
         ImageLoader.getInstance().init(config);
 
+    }
 
-
+    /**
+     * Use this to get context when calling services. This way even on-rotate, your fragments can
+     * pass in a valid context!
+     * @return Application Context
+     */
+    public static Context getAppContext() {
+        return singleton.getApplicationContext();
     }
 }

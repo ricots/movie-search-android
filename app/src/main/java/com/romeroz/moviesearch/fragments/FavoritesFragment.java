@@ -13,7 +13,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.adapters.MoviesAdapter;
+import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
+import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
 import com.romeroz.moviesearch.model.Movie;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -77,6 +83,9 @@ public class FavoritesFragment extends Fragment {
 
         loadFavorites();
 
+        // Register EventBus to receive events always
+        EventBus.getDefault().register(this);
+
         return mRootView;
     }
 
@@ -118,6 +127,31 @@ public class FavoritesFragment extends Fragment {
 
         // Call super last
         super.onSaveInstanceState(outState);
+    }
+
+    /**
+     * Receiving MovieAddedEvent event when it happens,
+     * Using sticky = true telling the activity please go and get the last MovieAddedEvent
+     * that has been posted before (e.g. if we navigated away from activity).
+     * See: http://greenrobot.org/eventbus/documentation/configuration/sticky-events/
+     * */
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onMovieAddedEvent(MovieAddedEvent event){
+        Movie movie = event.getMovie();
+        addMoveToAdapter(movie);
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onMovieRemovedEvent(MovieRemovedEvent event){
+        String imbdID = event.getImdbID();
+        removeMovieFromAdapter(imbdID);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Un-register EventBus to stop receiving events
+        EventBus.getDefault().unregister(this);
     }
 
 }

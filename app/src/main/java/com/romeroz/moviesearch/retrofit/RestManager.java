@@ -7,7 +7,7 @@ public class RestManager {
 
     private MovieInterface mMovieInterface;
 
-    public MovieInterface getmMovieInterface() {
+    public MovieInterface getMovieInterface() {
         if (mMovieInterface == null) {
 
             Retrofit retrofit = new Retrofit.Builder()

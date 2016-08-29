@@ -3,14 +3,17 @@ package com.romeroz.moviesearch.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.romeroz.moviesearch.MyApplication;
+import com.romeroz.moviesearch.eventbus.MovieDetailsEvent;
+import com.romeroz.moviesearch.eventbus.SearchMoviesEvent;
 import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.model.MovieSearchResponse;
 import com.romeroz.moviesearch.retrofit.RestManager;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -28,8 +31,6 @@ public class MovieService extends IntentService {
     // For this.startActionGetMovie()
     private static final String EXTRA_PARAM_IMDB_ID = "com.romeroz.moviesearch.services.extra.IMDB_ID";
 
-    public static final String RESULT = "EXTRA_OUT";
-    public static final String DATA = "DATA";
     public static final int STATUS_OK = 100;
 
     public MovieService() {
@@ -68,30 +69,22 @@ public class MovieService extends IntentService {
         RestManager mManager = new RestManager();
         MovieSearchResponse movieSearchResponse;
 
-        Intent intentResponse = new Intent();
-        intentResponse.setAction(MovieService.ACTION_SEARCH_MOVIES);
-
         try {
             Response<MovieSearchResponse> response = mManager
-                    .getmMovieInterface()
+                    .getMovieInterface()
                     .getSearchMovies(movieTitle, "movie", 1)
                     .execute();
 
             // Debugging to make sure everything is working properly
-            Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.isSuccessful());
-            Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.raw());
+            //Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.isSuccessful());
+            //Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.raw());
 
             if (response.isSuccessful()) {
                 movieSearchResponse = response.body();
 
                 Gson gson = new Gson();
 
-                // Set the ArrayList as part of our response.
-                intentResponse.putExtra(DATA, gson.toJson(movieSearchResponse));
-                intentResponse.putExtra(RESULT, STATUS_OK);
-
-                // Broadcast intent
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intentResponse);
+                EventBus.getDefault().post(new SearchMoviesEvent(gson.toJson(movieSearchResponse), STATUS_OK));
 
             } else {
                 Log.d(MyApplication.APP_TAG, "Response empty");
@@ -107,30 +100,21 @@ public class MovieService extends IntentService {
         RestManager mManager = new RestManager();
         Movie movie;
 
-        Intent intentResponse = new Intent();
-        intentResponse.setAction(MovieService.ACTION_GET_MOVIE);
-
         try {
             Response<Movie> response = mManager
-                    .getmMovieInterface()
+                    .getMovieInterface()
                     .getMovie(imdbID)
                     .execute();
 
             // Debugging to make sure everything is working properly
-            Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.isSuccessful());
-            Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.raw());
+            //Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.isSuccessful());
+            //Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.raw());
 
             if (response.isSuccessful()) {
                 movie = response.body();
 
                 Gson gson = new Gson();
-
-                // Set the ArrayList as part of our response.
-                intentResponse.putExtra(DATA, gson.toJson(movie));
-                intentResponse.putExtra(RESULT, STATUS_OK);
-
-                // Broadcast intent
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intentResponse);
+                EventBus.getDefault().post(new MovieDetailsEvent(gson.toJson(movie), STATUS_OK));
 
             } else {
                 Log.d(MyApplication.APP_TAG, "Response empty");

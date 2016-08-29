@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,21 +16,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.romeroz.moviesearch.MyApplication;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.adapters.ViewPagerAdapter;
-import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
-import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
 import com.romeroz.moviesearch.fragments.FavoritesFragment;
 import com.romeroz.moviesearch.fragments.SearchFragment;
 import com.romeroz.moviesearch.fragments.SettingsFragment;
-import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.ui.CustomViewPager;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -39,12 +30,12 @@ public class MainActivity extends AppCompatActivity
     // UI
     private ViewPagerAdapter mViewPagerAdapter;
     private CustomViewPager mViewPager;
+    private LinearLayout mSearchLayout;
 
     // From AppBar
     private EditText mSearchEditText;
     private AppCompatImageButton mSearchButton;
 
-    private LinearLayout mSearchLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +73,6 @@ public class MainActivity extends AppCompatActivity
             setupViewPager();
         }
 
-
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,56 +92,17 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
-
-        /**
-         * Register EventBus to receive events.
-         * See MovieDetailActivity for onStart()/onStop() implementation.
-         * Note: will get error if you try to register EventBus twice
-         */
-        EventBus.getDefault().register(this);
     }
 
     private void buttonSearchMovieHandler(){
+        String searchText = mSearchEditText.getText().toString();
+
         // Get SearchFragment (first fragment)
         SearchFragment searchFragment = (SearchFragment) mViewPagerAdapter.getItem(0);
-        searchFragment.searchForMovie(mSearchEditText.getText().toString());
+        searchFragment.searchForMovie(searchText);
 
         // Hide keyboard
         Utility.hideSoftKeyboard(MainActivity.this);
-    }
-
-    /**
-     * Receiving MovieAddedEvent event when it happens,
-     * Using sticky = true telling the activity please go and get the last MovieAddedEvent
-     * that has been posted before (e.g. if we navigated away from activity).
-     * See: http://greenrobot.org/eventbus/documentation/configuration/sticky-events/
-     * */
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onMovieAddedEvent(MovieAddedEvent event){
-        Log.d(MyApplication.APP_TAG, "MovieAddedEvent!");
-        Movie movie = event.getMovie();
-
-        // Update FavoritesFragment
-        FavoritesFragment favoritesFragment = (FavoritesFragment) mViewPagerAdapter.getItem(1);
-        favoritesFragment.addMoveToAdapter(movie);
-
-        // Update SearchFragment
-        SearchFragment searchFragment = (SearchFragment) mViewPagerAdapter.getItem(0);
-        searchFragment.updateMovieInAdapter(movie.getImdbID());
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onMovieRemovedEvent(MovieRemovedEvent event){
-        Log.d(MyApplication.APP_TAG, "MovieRemovedEvent!");
-        String imbdID = event.getImdbID();
-
-        // Update FavoritesFragment
-        FavoritesFragment favoritesFragment = (FavoritesFragment) mViewPagerAdapter.getItem(1);
-        favoritesFragment.removeMovieFromAdapter(imbdID);
-
-        // Update SearchFragment
-        SearchFragment searchFragment = (SearchFragment) mViewPagerAdapter.getItem(0);
-        searchFragment.updateMovieInAdapter(imbdID);
     }
 
     /**

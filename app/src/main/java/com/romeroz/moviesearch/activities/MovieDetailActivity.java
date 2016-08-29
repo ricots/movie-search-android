@@ -1,11 +1,6 @@
 package com.romeroz.moviesearch.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
@@ -19,8 +14,7 @@ import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.Utility;
-import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
-import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
+import com.romeroz.moviesearch.eventbus.MovieDetailsEvent;
 import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.services.MovieService;
 
@@ -51,8 +45,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView mWriterTextView;
     private ProgressBar mProgressBar;
     private ScrollView mScrollView;
-
-    private BroadcastReceiver mBroadcastReceiver;
 
     private Realm mRealm;
 
@@ -124,77 +116,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         MovieService.startActionGetMovie(this, imbdID);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // Register the BroadcastReceiver to receive broadcasts.
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(MovieService.ACTION_GET_MOVIE);
-        mBroadcastReceiver = new MovieReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, filter);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        // Unregister BroadcastReceiver. It is possible it wasn't registered so wrap in try/catch
-        try {
-            // Unregister the broadcast receivers on pause because we do not want to receive new info
-            // when an instance of the activity/fragment is in the background!
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
-        } catch (IllegalArgumentException e){
-            e.printStackTrace();
-        }
-    }
-
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onMovieAddedEvent(MovieAddedEvent event){
-        // Update UI
-        mFavoriteButton.setImageResource(R.drawable.ic_star_black_24dp);
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onMovieRemovedEvent(MovieRemovedEvent event){
-        // Update UI
-        mFavoriteButton.setImageResource(R.drawable.ic_star_border_black_24dp);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Register EventBus to receive events
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        // Un-register EventBus to stop receiving events
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    // When you receive data back from the IntentService network call, handle it.
-    public class MovieReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-            if(action.equals(MovieService.ACTION_GET_MOVIE)){
-                Bundle extras = intent.getExtras();
-                handleActionGetMovie(extras);
-            }
-        }
-    }
-
-    private void handleActionGetMovie(Bundle extras){
-        int result = extras.getInt(MovieService.RESULT);
+    public void onGetMovieDetailsEvent(MovieDetailsEvent event){
+        int result = event.getResult();
 
         if(result == MovieService.STATUS_OK ){
 
             Gson gson = new Gson();
-            String data = extras.getString(MovieService.DATA);
+            String data = event.getData();
             // Update Movie object with complete data from api call
             mMovie = gson.fromJson(data, Movie.class);
 
@@ -209,8 +138,8 @@ public class MovieDetailActivity extends AppCompatActivity {
             mPlotTextView.setText(mMovie.getPlot());
             mDirectorTextView.setText(mMovie.getDirector());
             mReleasedTextView.setText(mMovie.getReleased());
-            mImbdRatingTextView.setText(mMovie.getImdbRating());
-            mMetascoreTextView.setText(mMovie.getMetascore());
+            mImbdRatingTextView.setText(mMovie.getImdbRating() + "/10");
+            mMetascoreTextView.setText(mMovie.getMetascore() + "/100");
             mAwardsTextView.setText(mMovie.getAwards());
             mActorsTextView.setText(mMovie.getActors());
             mWriterTextView.setText(mMovie.getWriter());
@@ -228,10 +157,21 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             // Hide spinner
             Utility.showProgress(false, this, mProgressBar, mScrollView);
-
         }
-
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Register EventBus to receive events
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        // Un-register EventBus to stop receiving events
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
 }

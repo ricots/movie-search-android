@@ -2,7 +2,6 @@ package com.romeroz.moviesearch.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -21,19 +20,14 @@ import com.romeroz.moviesearch.model.Movie;
 
 import java.util.ArrayList;
 
-import io.realm.Realm;
-
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     private Context mContext;
     private ArrayList<Movie> mItemArrayList;
-    private Realm mRealm;
 
     public MoviesAdapter(Context context) {
         this.mContext = context;
-        // Get Realm Instance
-        mRealm = Realm.getDefaultInstance();
      }
 
     @Override
@@ -65,15 +59,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
         if(Utility.movieIsFavorite(imdbID)){
             viewHolder.mFavoriteButton.setImageResource(R.drawable.ic_star_black_24dp);
-            // Todo: not working to set color
-            viewHolder.mFavoriteButton.setSupportBackgroundTintList(
-                    ContextCompat.getColorStateList(mContext, R.color.gold));
         } else {
-            // Defaults
+            // Default
             viewHolder.mFavoriteButton.setImageResource(R.drawable.ic_star_border_black_24dp);
-            // todo not working
-            viewHolder.mFavoriteButton.setSupportBackgroundTintList(
-                    ContextCompat.getColorStateList(mContext, R.color.grey));
         }
     }
 
@@ -139,9 +127,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         }
 
         // Remove movie here to avoid java.util.ConcurrentModificationException
-        Movie movie =  mItemArrayList.get(moviePosition);
-        mItemArrayList.remove(movie);
-        notifyItemRemoved(position);
+        mItemArrayList.remove(moviePosition);
+        notifyItemRemoved(moviePosition);
     }
 
     public void updateMovieByImbdID(String imbdID){

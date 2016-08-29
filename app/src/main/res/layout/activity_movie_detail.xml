@@ -62,10 +62,12 @@
                 android:id="@+id/title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Teenage Mutant Ninja Turtles (1990)"
+                android:text="Teenage Mutant Ninja Turtles(1990)"
                 style="@style/Base.TextAppearance.AppCompat.Large"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -100,7 +102,7 @@
                 android:orientation="horizontal"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="4dp">
 
                 <TextView
                     android:id="@+id/genre_text_view"
@@ -152,12 +154,14 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Director: "
+                            android:layout_weight="1"
+                            android:textStyle="bold"
                             />
 
                         <TextView
@@ -172,13 +176,14 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Released: "
                             android:layout_weight="1"
+                            android:textStyle="bold"
                             />
 
                         <TextView
@@ -193,13 +198,14 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="IMBD Rating: "
                             android:layout_weight="1"
+                            android:textStyle="bold"
                             />
 
                         <TextView
@@ -214,13 +220,14 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Metascore: "
                             android:layout_weight="1"
+                            android:textStyle="bold"
                             />
 
                         <TextView
@@ -228,26 +235,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="N/A"
-                            />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Awards: "
-                            />
-
-                        <TextView
-                            android:id="@+id/awards_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3 wins and 3 nominations."
                             />
 
                     </LinearLayout>
@@ -262,7 +249,7 @@
                 android:orientation="horizontal"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -270,9 +257,10 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="54dp"
                         android:layout_height="wrap_content"
                         android:text="Actors: "
+                        android:textStyle="bold"
                         />
 
                     <TextView
@@ -291,7 +279,7 @@
                 android:orientation="horizontal"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -299,9 +287,41 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:layout_width="54dp"
+                        android:layout_height="wrap_content"
+                        android:text="Awards: "
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/awards_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="3 wins and 3 nominations."
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="54dp"
+                        android:layout_height="wrap_content"
                         android:text="Writer: "
+                        android:textStyle="bold"
                         />
 
                     <TextView
@@ -314,7 +334,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
 
         </LinearLayout>
 
