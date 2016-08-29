@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,7 +7,19 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/movie_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
 
+    <TextView
+        android:id="@+id/no_favorites_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:lines="4"
+        android:text="You don't have any favorite movies yet!\n\nSearch for movies to add them to your favoites."/>
 
-</FrameLayout>
+</RelativeLayout>

@@ -62,7 +62,7 @@
                 android:id="@+id/title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Teenage Mutant Ninja Turtles(1990)"
+                android:text="Teenage Mutant Ninja Turtles (1990)"
                 style="@style/Base.TextAppearance.AppCompat.Large"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"

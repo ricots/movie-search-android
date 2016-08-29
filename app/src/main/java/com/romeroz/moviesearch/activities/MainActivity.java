@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,6 @@ import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.adapters.ViewPagerAdapter;
 import com.romeroz.moviesearch.fragments.FavoritesFragment;
 import com.romeroz.moviesearch.fragments.SearchFragment;
-import com.romeroz.moviesearch.fragments.SettingsFragment;
 import com.romeroz.moviesearch.ui.CustomViewPager;
 
 public class MainActivity extends AppCompatActivity
@@ -94,6 +94,27 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Making sure ToolBar stays relevant on-rotate
+        updateToolBarUI();
+    }
+
+    private void updateToolBarUI(){
+        int currentItem = mViewPager.getCurrentItem();
+        Log.d("Roman", "current item" + String.valueOf(currentItem));
+        if(currentItem == 0){
+            mSearchLayout.setVisibility(View.VISIBLE);
+        } else if (currentItem == 1){
+            mSearchLayout.setVisibility(View.GONE);
+        }
+
+        // Set ToolBar Title
+        getSupportActionBar().setTitle(mViewPagerAdapter.getPageTitle(currentItem));
+    }
+
     private void buttonSearchMovieHandler(){
         String searchText = mSearchEditText.getText().toString();
 
@@ -111,29 +132,18 @@ public class MainActivity extends AppCompatActivity
     private void setupViewPager() {
         SearchFragment searchFragment = SearchFragment.newInstance();
         FavoritesFragment favoritesFragment = FavoritesFragment.newInstance();
-        SettingsFragment settingsFragment = SettingsFragment.newInstance("","");
 
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mViewPagerAdapter.addFragment(searchFragment, "Search");
         mViewPagerAdapter.addFragment(favoritesFragment, "Favorites");
-        mViewPagerAdapter.addFragment(settingsFragment, "Settings");
 
-        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mViewPagerAdapter);
 
         // Disable swiping left and right
         mViewPager.setPagingEnabled(false);
 
-        // First fragment toolbar
-        showSearchToolbar();
-    }
-
-    private void showSearchToolbar(){
-        mSearchLayout.setVisibility(View.VISIBLE);
-    }
-
-    private void hideSearchToolbar() {
-        mSearchLayout.setVisibility(View.GONE);
+        updateToolBarUI();
     }
 
     @Override
@@ -156,19 +166,14 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_search) {
             // Scroll ViewPager to page without animation
             mViewPager.setCurrentItem(0, false);
-            showSearchToolbar();
 
         } else if (id == R.id.nav_favorites) {
 
             mViewPager.setCurrentItem(1, false);
-            hideSearchToolbar();
-
-        } else if (id == R.id.nav_settings) {
-
-            mViewPager.setCurrentItem(2, false);
-            hideSearchToolbar();
-
         }
+
+        updateToolBarUI();
+
         // Set title (Only works if there are no other views inside of Toolbar view)
         getSupportActionBar().setTitle(item.getTitle());
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

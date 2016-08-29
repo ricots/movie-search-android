@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,6 +31,7 @@ import io.realm.RealmResults;
 public class FavoritesFragment extends Fragment {
 
     private View mRootView;
+    private TextView mNoFavoritesTextView;
     private RecyclerView mMoviesRecyclerView;
     private MoviesAdapter mMoviesAdapter;
     private ArrayList<Movie> mMovieList;
@@ -55,6 +57,7 @@ public class FavoritesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment. Get the rootView and do stuff to it
         mRootView = inflater.inflate(R.layout.fragment_favorites, container, false);
+        mNoFavoritesTextView = (TextView) mRootView.findViewById(R.id.no_favorites_text_view);
 
         // Set up RecyclerView
         mMoviesRecyclerView = (RecyclerView) mRootView.findViewById(R.id.movie_recycler_view);
@@ -108,14 +111,30 @@ public class FavoritesFragment extends Fragment {
         mMovieList = (ArrayList<Movie>) mRealm.copyFromRealm(realmResults);
 
         mMoviesAdapter.swapData(mMovieList);
+        updateUI();
     }
 
     public void removeMovieFromAdapter(String imbdID){
         mMoviesAdapter.removeMovieByImbdID(imbdID);
+        updateUI();
     }
 
     public void addMoveToAdapter(Movie movie){
         mMoviesAdapter.addItem(movie);
+        updateUI();
+    }
+
+    private void updateUI(){
+        int numFavorites = mMoviesAdapter.getItemCount();
+
+        // Check if we have any movies in our adapter. If so, display views.
+        if(numFavorites >= 1){
+            mMoviesRecyclerView.setVisibility(View.VISIBLE);
+            mNoFavoritesTextView.setVisibility(View.GONE);
+        } else {
+            mMoviesRecyclerView.setVisibility(View.GONE);
+            mNoFavoritesTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
