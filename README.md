@@ -1,5 +1,8 @@
 #<img src="app/src/main/res/mipmap-xhdpi/ic_launcher.png" width="40"/> Movie Search
-**<A movie search app for Android that uses Retrofit2, Realm, Gson, EventBus, Universal Image Loader.**
+**A movie search app for Android that uses Retrofit2, Realm, Gson, EventBus, Universal Image Loader.**
+
+<img style="float:left; height: 40px; width: 40px; margin-right: 4px;" src="app/src/main/res/mipmap-xhdpi/ic_launcher.png"/>
+<h1 style='float:left;" >Movie Search</h1>
 
 Live on Google Play: https://play.google.com/store/apps/details?id=com.romeroz.moviesearch
 
