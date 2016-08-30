@@ -6,9 +6,9 @@ Uses the free public API: http://www.omdbapi.com/
 See how to connect various Android libraries to bring together a beautiful app!
 
 <p align="center">
-  <img src="screenshots/screenshot_1" width="250"/>
-  <img src="screenshots/screenshot_2" width="250"/>
-  <img src="screenshots/screenshot_3" width="250"/>
+  <img src="screenshots/screenshot_1.png" width="250"/>
+  <img src="screenshots/screenshot_2.png" width="250"/>
+  <img src="screenshots/screenshot_3.png" width="250"/>
 </p>
 
 ##Android technologies used:<br />
