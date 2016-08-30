@@ -1,5 +1,5 @@
 # Movie Search
-**A movie search app for Android that uses Retrofit2, Realm, Gson, EventBus, Universal Image Loader.**
+**<img src="app/src/main/res/mipmap-xhdpi/ic_launcher.png" width="40"/>A movie search app for Android that uses Retrofit2, Realm, Gson, EventBus, Universal Image Loader.**
 
 Live on Google Play: https://play.google.com/store/apps/details?id=com.romeroz.moviesearch
 
@@ -21,5 +21,5 @@ See how to connect various Android libraries to bring together a beautiful app!
 ##More information:
 - Utilizes the free public OMDB API: http://www.omdbapi.com
 - This app uses a NavigationDrawer with a ViewPager. <br />
-- It supports rotating the device without loosing your data in a RecyclerView. <br />
+- Supports device rotation without loosing your data in a RecyclerView. <br />
 - EventBus helps keep all activities/fragments in-sync with what is happening in the rest of the app.<br />
