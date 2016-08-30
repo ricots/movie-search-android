@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +21,7 @@ import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.adapters.ViewPagerAdapter;
 import com.romeroz.moviesearch.fragments.FavoritesFragment;
 import com.romeroz.moviesearch.fragments.SearchFragment;
-import com.romeroz.moviesearch.ui.CustomViewPager;
+import com.romeroz.moviesearch.custom.CustomViewPager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity
     private CustomViewPager mViewPager;
     private LinearLayout mSearchLayout;
 
-    // From AppBar
+    // AppBar
     private EditText mSearchEditText;
     private AppCompatImageButton mSearchButton;
 
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        // Searches after you press "Search" in softkeyboard
+        // Searches after you press "Search" in soft keyboard
         // Remember to set android:imeOptions="actionSearch" in the last EditText
         mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -94,27 +93,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Making sure ToolBar stays relevant on-rotate
-        updateToolBarUI();
-    }
-
-    private void updateToolBarUI(){
-        int currentItem = mViewPager.getCurrentItem();
-        Log.d("Roman", "current item" + String.valueOf(currentItem));
-        if(currentItem == 0){
-            mSearchLayout.setVisibility(View.VISIBLE);
-        } else if (currentItem == 1){
-            mSearchLayout.setVisibility(View.GONE);
-        }
-
-        // Set ToolBar Title
-        getSupportActionBar().setTitle(mViewPagerAdapter.getPageTitle(currentItem));
-    }
-
     private void buttonSearchMovieHandler(){
         String searchText = mSearchEditText.getText().toString();
 
@@ -124,6 +102,26 @@ public class MainActivity extends AppCompatActivity
 
         // Hide keyboard
         Utility.hideSoftKeyboard(MainActivity.this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Making sure ToolBar stays relevant on rotate
+        updateToolBarUI();
+    }
+
+    private void updateToolBarUI(){
+        int currentItem = mViewPager.getCurrentItem();
+
+        if(currentItem == 0){
+            mSearchLayout.setVisibility(View.VISIBLE);
+        } else if (currentItem == 1){
+            mSearchLayout.setVisibility(View.GONE);
+        }
+
+        // Set ToolBar Title
+        getSupportActionBar().setTitle(mViewPagerAdapter.getPageTitle(currentItem));
     }
 
     /**
@@ -147,18 +145,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -179,5 +165,15 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -1,11 +1,13 @@
 package com.romeroz.moviesearch.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.eventbus.MovieDetailsEvent;
+import com.romeroz.moviesearch.eventbus.NoInternetEvent;
 import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.services.MovieService;
 
@@ -28,6 +31,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     public static String ARG_MOVIE = "MOVIE";
 
+    // UI
     private Toolbar mToolbar;
     private AppCompatImageButton mFavoriteButton;
     private ImageView mPosterImageView;
@@ -45,6 +49,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView mWriterTextView;
     private ProgressBar mProgressBar;
     private ScrollView mScrollView;
+    private LinearLayout mMainView;
 
     private Realm mRealm;
 
@@ -72,6 +77,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mWriterTextView = (TextView) findViewById(R.id.writer_text_view);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mScrollView = (ScrollView) findViewById(R.id.scroll_view);
+        mMainView = (LinearLayout) findViewById(R.id.main_linear_layout);
 
         // Setup Toolbar
         mToolbar = (Toolbar)findViewById(R.id.toolbar);
@@ -91,11 +97,10 @@ public class MovieDetailActivity extends AppCompatActivity {
             mImbdID = mMovie.getImdbID();
             getMovie(mImbdID);
         } else {
-            throw new IllegalStateException("You must supply a imbdID to load this activity.");
+            throw new IllegalStateException("You must supply a imdbID to load this activity.");
         }
 
         setupFavoriteButton(mFavoriteButton);
-
     }
 
     private void setupFavoriteButton(final AppCompatImageButton appCompatImageButton){
@@ -112,8 +117,20 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     // Start service to fetch movie data
     private void getMovie(String imbdID){
+        // Show progress
         Utility.showProgress(true, MovieDetailActivity.this, mProgressBar, mScrollView);
+        // Start IntentService
         MovieService.startActionGetMovie(this, imbdID);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNoInternetEvent(NoInternetEvent event){
+        // Hide main view
+        mMainView.setVisibility(View.GONE);
+        Snackbar.make(mScrollView,
+                "No internet connection.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        // Hide spinner
+        Utility.showProgress(false, this, mProgressBar, mScrollView);
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -155,6 +172,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             // Show button
             mFavoriteButton.setVisibility(View.VISIBLE);
 
+            // Show main view
+            mMainView.setVisibility(View.VISIBLE);
+
             // Hide spinner
             Utility.showProgress(false, this, mProgressBar, mScrollView);
         }
@@ -173,5 +193,4 @@ public class MovieDetailActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
-
 }

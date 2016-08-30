@@ -8,18 +8,17 @@
         android:id="@+id/movie_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/no_favorites_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
         android:lines="4"
-        android:text="You don't have any favorite movies yet!\n\nSearch for movies to add them to your favoites."/>
+        android:padding="16dp"
+        android:text="You don't have any favorite movies yet!\n\nSearch for movies to add them to your favoites."
+        android:textAppearance="?android:textAppearanceMedium" />
 
 </RelativeLayout>

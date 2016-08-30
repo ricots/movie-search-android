@@ -7,7 +7,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.romeroz.moviesearch.MyApplication;
+import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.eventbus.MovieDetailsEvent;
+import com.romeroz.moviesearch.eventbus.NoInternetEvent;
 import com.romeroz.moviesearch.eventbus.SearchMoviesEvent;
 import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.model.MovieSearchResponse;
@@ -20,15 +22,13 @@ import java.io.IOException;
 import retrofit2.Response;
 
 /**
- * Database: http://www.omdbapi.com/
+ * API: http://www.omdbapi.com/
  */
 public class MovieService extends IntentService {
     public static final String ACTION_SEARCH_MOVIES = "com.romeroz.moviesearch.services.action.SEARCH_MOVIES";
     public static final String ACTION_GET_MOVIE = "com.romeroz.moviesearch.services.action.GET_MOVIE";
 
-    // For this.startActionSearchMovies()
     private static final String EXTRA_PARAM_MOVIE_TITLE = "com.romeroz.moviesearch.services.extra.MOVIE_TITLE";
-    // For this.startActionGetMovie()
     private static final String EXTRA_PARAM_IMDB_ID = "com.romeroz.moviesearch.services.extra.IMDB_ID";
 
     public static final int STATUS_OK = 100;
@@ -66,6 +66,13 @@ public class MovieService extends IntentService {
     }
 
     private void handleActionSearchMovies(String movieTitle) {
+
+        // Check for internet connection
+        if (!Utility.hasInternetAccess(this)) {
+            EventBus.getDefault().post(new NoInternetEvent());
+            return;
+        }
+
         RestManager mManager = new RestManager();
         MovieSearchResponse movieSearchResponse;
 
@@ -97,6 +104,13 @@ public class MovieService extends IntentService {
     }
 
     private void handleActionGetMovie(String imdbID) {
+
+        // Check for internet connection
+        if (!Utility.hasInternetAccess(this)) {
+            EventBus.getDefault().post(new NoInternetEvent());
+            return;
+        }
+
         RestManager mManager = new RestManager();
         Movie movie;
 

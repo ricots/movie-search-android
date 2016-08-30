@@ -4,33 +4,30 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardCornerRadius="4dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
-    >
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="4dp"
+    card_view:cardCornerRadius="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:orientation="horizontal"
-        android:padding="8dp"
-        >
+        android:padding="8dp">
 
         <ImageView
             android:id="@+id/poster_image_view"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/blank_movie_poster"
-            android:layout_marginRight="16dp"/>
+            android:layout_marginRight="16dp"
+            android:src="@drawable/blank_movie_poster" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="90dp"
-            android:orientation="vertical"
             android:layout_gravity="center_vertical"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/title_text_view"
@@ -39,18 +36,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_vertical"
                 android:text="Teenage Mutant Ninja Turtles"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
                 android:id="@+id/year_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="2dp"
                 android:layout_below="@id/title_text_view"
+                android:paddingTop="2dp"
                 android:text="2014"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/favorite_button"
@@ -62,8 +57,7 @@
                 android:padding="2dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_star_border_black_24dp"
-                android:tint="@color/star_color"
-                />
+                android:tint="@color/star_color" />
 
         </RelativeLayout>
 

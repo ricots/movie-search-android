@@ -47,5 +47,4 @@ dependencies {
 
     // EventBus - See: https://github.com/greenrobot/EventBus
     compile 'org.greenrobot:eventbus:3.0.0'
-
 }

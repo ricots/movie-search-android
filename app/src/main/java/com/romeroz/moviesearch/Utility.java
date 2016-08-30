@@ -4,7 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.widget.AppCompatImageButton;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
@@ -14,6 +17,10 @@ import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
 import com.romeroz.moviesearch.model.Movie;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -132,5 +139,51 @@ public class Utility {
             view = new View(activity);
         }
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     * Check if there is internet access making a simple ping to google.
+     * Note: Must be run on background thread.
+     * See: http://stackoverflow.com/questions/6493517/detect-if-android-device-has-internet-connection
+     *
+     * @Param context Context
+     */
+    public static boolean hasInternetAccess(Context context) {
+        if (isNetworkAvailable(context)) {
+            try {
+                HttpURLConnection urlc = (HttpURLConnection)
+                        (new URL("http://clients3.google.com/generate_204")
+                                .openConnection());
+                urlc.setRequestProperty("User-Agent", "Android");
+                urlc.setRequestProperty("Connection", "close");
+                urlc.setConnectTimeout(1500);
+                urlc.connect();
+                if (urlc.getResponseCode() == 204 && urlc.getContentLength() == 0){
+                    Log.d(MyApplication.APP_TAG, "Internet available.");
+                    return true;
+                }
+            } catch (IOException e) {
+                Log.e(MyApplication.APP_TAG, "Error checking internet connection", e);
+            }
+        } else {
+            Log.d(MyApplication.APP_TAG, "No network available!");
+        }
+        return false;
+    }
+
+    /**
+     * Check if there is an available network (e.g. Wifi).
+     * Note: only checks for network, does not check if there is internet access.
+     *
+     * Required Permission:
+     * <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+     *
+     * @Param context Context
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }

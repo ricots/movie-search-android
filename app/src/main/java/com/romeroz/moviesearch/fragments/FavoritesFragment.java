@@ -139,13 +139,11 @@ public class FavoritesFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        //super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+
         // Save our data via Gson
         Gson gson = new Gson();
         outState.putString("itemList", gson.toJson(mMovieList));
-
-        // Call super last
-        super.onSaveInstanceState(outState);
     }
 
     /**

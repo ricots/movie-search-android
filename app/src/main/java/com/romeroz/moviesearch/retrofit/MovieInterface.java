@@ -8,7 +8,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-// For full movie API info see: http://www.omdbapi.com/
+/**
+ * The IMDB API: http://www.omdbapi.com/
+ */
 public interface MovieInterface {
 
     /**
@@ -29,7 +31,6 @@ public interface MovieInterface {
      * @return
      */
     @GET("./")
-    Call<Movie> getMovie(
-            @Query("i") String imbdID);
+    Call<Movie> getMovie(@Query("i") String imbdID);
 
 }

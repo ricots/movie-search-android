@@ -19,6 +19,7 @@ import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.adapters.MoviesAdapter;
 import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
 import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
+import com.romeroz.moviesearch.eventbus.NoInternetEvent;
 import com.romeroz.moviesearch.eventbus.SearchMoviesEvent;
 import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.model.MovieSearchResponse;
@@ -161,6 +162,14 @@ public class SearchFragment extends Fragment {
     public void onMovieRemovedEvent(MovieRemovedEvent event){
         String imbdID = event.getImdbID();
         updateMovieInAdapter(imbdID);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNoInternetEvent(NoInternetEvent event){
+        Snackbar.make(mRootView,
+                "No internet connection.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        // Hide spinner
+        Utility.showProgress(false, getActivity(), mProgressBar, mMoviesRecyclerView);
     }
 
     @Override

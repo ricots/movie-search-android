@@ -1,4 +1,4 @@
-package com.romeroz.moviesearch.ui;
+package com.romeroz.moviesearch.custom;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
@@ -37,4 +37,5 @@ public class CustomViewPager extends ViewPager {
 
     public void setPagingEnabled(boolean enabled) {
         this.enabled = enabled;
-    } }
+    }
+}

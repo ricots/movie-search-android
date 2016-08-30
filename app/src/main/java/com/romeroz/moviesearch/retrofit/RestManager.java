@@ -20,5 +20,4 @@ public class RestManager {
         return mMovieInterface;
     }
 
-
 }

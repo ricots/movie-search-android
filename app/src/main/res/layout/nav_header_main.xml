@@ -24,5 +24,4 @@
         android:text="Movie Search"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-
 </LinearLayout>
