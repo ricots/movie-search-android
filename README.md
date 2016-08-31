@@ -1,7 +1,7 @@
 #<img src="app/src/main/res/mipmap-xhdpi/ic_launcher.png" width="40"/> Movie Search
 **A movie search app for Android that uses Retrofit2, Realm, Gson, EventBus, Universal Image Loader.**
 
-Live on Google Play: <a href="https://play.google.com/store/apps/details?id=com.romeroz.moviesearch">Google Play Listing</a> <br />
+Live on Google Play: <a href="https://play.google.com/store/apps/details?id=com.romeroz.moviesearch" target="_blank">Google Play Listing</a> <br />
 
 See how to connect various Android libraries to bring together a beautiful app!
 
