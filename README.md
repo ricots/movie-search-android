@@ -24,5 +24,5 @@ See how to connect various Android libraries to bring together a beautiful app!
 ##More information:
 - Utilizes the free public OMDB API: http://www.omdbapi.com
 - This app uses a NavigationDrawer with a ViewPager. <br />
-- Supports device rotation without loosing your data in a RecyclerView. <br />
+- Supports device rotation without losing your data in a RecyclerView. <br />
 - EventBus helps keep all activities/fragments in-sync with what is happening in the rest of the app.<br />
