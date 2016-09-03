@@ -37,7 +37,7 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
-    // Gson - See: https://github.com/google/gson (needed for retrofit2)
+    // Gson - See: https://github.com/google/gson
     compile 'com.google.code.gson:gson:2.6.2'
 
     // Universal Image Loader - See: https://github.com/nostra13/Android-Universal-Image-Loader
