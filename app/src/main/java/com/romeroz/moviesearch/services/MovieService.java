@@ -82,10 +82,6 @@ public class MovieService extends IntentService {
                     .getSearchMovies(movieTitle, "movie", 1)
                     .execute();
 
-            // Debugging to make sure everything is working properly
-            //Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.isSuccessful());
-            //Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.raw());
-
             if (response.isSuccessful()) {
                 movieSearchResponse = response.body();
 
@@ -119,10 +115,6 @@ public class MovieService extends IntentService {
                     .getMovieInterface()
                     .getMovie(imdbID)
                     .execute();
-
-            // Debugging to make sure everything is working properly
-            //Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.isSuccessful());
-            //Log.d(MyApplication.APP_TAG, "Retrofit2 returned: " + response.raw());
 
             if (response.isSuccessful()) {
                 movie = response.body();

@@ -1,8 +1,6 @@
 apply plugin: 'com.android.application'
 // Realm (2/2) - See: https://realm.io/docs/java/latest/
 apply plugin: 'realm-android'
-// Dagger (2/3) - See: https://github.com/codepath/android_guides/wiki/Dependency-Injection-with-Dagger-2
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 24
