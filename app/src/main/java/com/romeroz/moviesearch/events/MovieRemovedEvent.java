@@ -1,4 +1,4 @@
-package com.romeroz.moviesearch.eventbus;
+package com.romeroz.moviesearch.events;
 
 public class MovieRemovedEvent {
     private String imdbID;

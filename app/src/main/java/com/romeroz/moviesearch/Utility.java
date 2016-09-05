@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 
-import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
-import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
+import com.romeroz.moviesearch.events.MovieAddedEvent;
+import com.romeroz.moviesearch.events.MovieRemovedEvent;
 import com.romeroz.moviesearch.model.Movie;
 
 import org.greenrobot.eventbus.EventBus;

@@ -8,12 +8,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.romeroz.moviesearch.MyApplication;
 import com.romeroz.moviesearch.Utility;
-import com.romeroz.moviesearch.eventbus.MovieDetailsEvent;
-import com.romeroz.moviesearch.eventbus.NoInternetEvent;
-import com.romeroz.moviesearch.eventbus.SearchMoviesEvent;
+import com.romeroz.moviesearch.events.MovieDetailsEvent;
+import com.romeroz.moviesearch.events.NoInternetEvent;
+import com.romeroz.moviesearch.events.SearchMoviesEvent;
 import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.model.MovieSearchResponse;
-import com.romeroz.moviesearch.retrofit.RestManager;
+import com.romeroz.moviesearch.rest.RestManager;
 
 import org.greenrobot.eventbus.EventBus;
 

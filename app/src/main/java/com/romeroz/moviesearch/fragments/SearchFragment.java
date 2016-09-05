@@ -17,10 +17,10 @@ import com.romeroz.moviesearch.MyApplication;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.Utility;
 import com.romeroz.moviesearch.adapters.MoviesAdapter;
-import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
-import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
-import com.romeroz.moviesearch.eventbus.NoInternetEvent;
-import com.romeroz.moviesearch.eventbus.SearchMoviesEvent;
+import com.romeroz.moviesearch.events.MovieAddedEvent;
+import com.romeroz.moviesearch.events.MovieRemovedEvent;
+import com.romeroz.moviesearch.events.NoInternetEvent;
+import com.romeroz.moviesearch.events.SearchMoviesEvent;
 import com.romeroz.moviesearch.model.Movie;
 import com.romeroz.moviesearch.model.MovieSearchResponse;
 import com.romeroz.moviesearch.services.MovieService;
@@ -42,16 +42,17 @@ public class SearchFragment extends Fragment {
 
     private View mRootView;
     private RecyclerView mMoviesRecyclerView;
+    private ProgressBar mProgressBar;
     private MoviesAdapter mMoviesAdapter;
     private ArrayList<Movie> mMovieList;
 
-    private ProgressBar mProgressBar;
+    private static final String SAVED_INSTANCE_ITEM_LIST = "itemList";
 
     public SearchFragment() {
         // Required empty public constructor
     }
 
-    // This fragment takes no arguements
+    // This fragment takes no arguments
     public static SearchFragment newInstance() {
         SearchFragment fragment = new SearchFragment();
         return fragment;
@@ -87,7 +88,7 @@ public class SearchFragment extends Fragment {
         // Did we rotate the screen? If so load data saved in onSavedInstanceState()
         if(savedInstanceState != null){
             Gson gson = new Gson();
-            String data = savedInstanceState.getString("itemList");
+            String data = savedInstanceState.getString(SAVED_INSTANCE_ITEM_LIST);
             // Set type for List
             Type type = new TypeToken<ArrayList<Movie>>(){}.getType();
             mMovieList = gson.fromJson(data, type);
@@ -108,7 +109,7 @@ public class SearchFragment extends Fragment {
 
         // Save our data via Gson
         Gson gson = new Gson();
-        outState.putString("itemList", gson.toJson(mMovieList));
+        outState.putString(SAVED_INSTANCE_ITEM_LIST, gson.toJson(mMovieList));
     }
 
     public void updateMovieInAdapter(String imbdID){
@@ -166,10 +167,11 @@ public class SearchFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNoInternetEvent(NoInternetEvent event){
-        Snackbar.make(mRootView,
-                "No internet connection.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         // Hide spinner
         Utility.showProgress(false, getActivity(), mProgressBar, mMoviesRecyclerView);
+
+        Snackbar.make(mRootView,
+                "No internet connection.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override

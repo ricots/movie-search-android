@@ -1,4 +1,4 @@
-package com.romeroz.moviesearch.retrofit;
+package com.romeroz.moviesearch.rest;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -1,4 +1,4 @@
-package com.romeroz.moviesearch.retrofit;
+package com.romeroz.moviesearch.rest;
 
 
 import com.romeroz.moviesearch.model.Movie;

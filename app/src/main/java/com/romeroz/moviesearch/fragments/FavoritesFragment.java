@@ -14,8 +14,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.romeroz.moviesearch.R;
 import com.romeroz.moviesearch.adapters.MoviesAdapter;
-import com.romeroz.moviesearch.eventbus.MovieAddedEvent;
-import com.romeroz.moviesearch.eventbus.MovieRemovedEvent;
+import com.romeroz.moviesearch.events.MovieAddedEvent;
+import com.romeroz.moviesearch.events.MovieRemovedEvent;
 import com.romeroz.moviesearch.model.Movie;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,6 +35,8 @@ public class FavoritesFragment extends Fragment {
     private RecyclerView mMoviesRecyclerView;
     private MoviesAdapter mMoviesAdapter;
     private ArrayList<Movie> mMovieList;
+
+    private static final String SAVED_INSTANCE_ITEM_LIST = "itemList";
 
     public FavoritesFragment() {
         // Required empty public constructor
@@ -75,7 +77,7 @@ public class FavoritesFragment extends Fragment {
         // Did we rotate the screen? If so load data saved in onSavedInstanceState()
         if(savedInstanceState != null){
             Gson gson = new Gson();
-            String data = savedInstanceState.getString("itemList");
+            String data = savedInstanceState.getString(SAVED_INSTANCE_ITEM_LIST);
             // Set type for List
             Type type = new TypeToken<ArrayList<Movie>>(){}.getType();
             mMovieList = gson.fromJson(data, type);
@@ -143,7 +145,7 @@ public class FavoritesFragment extends Fragment {
 
         // Save our data via Gson
         Gson gson = new Gson();
-        outState.putString("itemList", gson.toJson(mMovieList));
+        outState.putString(SAVED_INSTANCE_ITEM_LIST, gson.toJson(mMovieList));
     }
 
     /**

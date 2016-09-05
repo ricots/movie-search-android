@@ -1,4 +1,4 @@
-package com.romeroz.moviesearch.eventbus;
+package com.romeroz.moviesearch.events;
 
 import com.romeroz.moviesearch.model.Movie;
 
