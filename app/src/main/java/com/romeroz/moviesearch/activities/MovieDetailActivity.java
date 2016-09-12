@@ -70,7 +70,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mPlotTextView = (TextView) findViewById(R.id.plot_text_view);
         mDirectorTextView = (TextView) findViewById(R.id.director_text_view);
         mReleasedTextView = (TextView) findViewById(R.id.released_text_view);
-        mImbdRatingTextView = (TextView) findViewById(R.id.imbd_rating_text_view);
+        mImbdRatingTextView = (TextView) findViewById(R.id.imdb_rating_text_view);
         mMetascoreTextView = (TextView) findViewById(R.id.metascore_text_view);
         mAwardsTextView = (TextView) findViewById(R.id.awards_text_view);
         mActorsTextView = (TextView) findViewById(R.id.actors_text_view);
