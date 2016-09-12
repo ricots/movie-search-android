@@ -26,11 +26,11 @@ public interface MovieInterface {
             @Query("s") String movieTitle, @Query("type") String type, @Query("page") int page);
 
     /**
-     * Get movie by imbdID
-     * @param imbdID ID
+     * Get movie by imdbID
+     * @param imdbID ID
      * @return
      */
     @GET("./")
-    Call<Movie> getMovie(@Query("i") String imbdID);
+    Call<Movie> getMovie(@Query("i") String imdbID);
 
 }
