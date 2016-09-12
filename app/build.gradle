@@ -10,8 +10,8 @@ android {
         applicationId "com.romeroz.moviesearch"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         // See: http://android-developers.blogspot.com/2016/02/android-support-library-232.html
         vectorDrawables.useSupportLibrary = true
     }
